@@ -1,16 +1,13 @@
-# Building Node.js
+## 构建Node.js
 
-Depending on what platform or features you need, the build process may
-differ. After you've built a binary, running the
-test suite to confirm that the binary works as intended is a good next step.
+根据不同的系统和特性，构建过程可能会
+是不同的。在构建完后会生成一个二进制文件，运行
+单测，确保二级制文件的正确性，以保证可以正常执行下一步。
+如果测试失败，提交错误信息。
 
-If you can reproduce a test failure, search for it in the
-[Node.js issue tracker](https://github.com/nodejs/node/issues) or
-file a new issue.
+## 目录
 
-## Table of Contents
-
-* [Supported platforms](#supported-platforms)
+* [支持的平台](#supported-platforms)
   * [Input](#input)
   * [Strategy](#strategy)
   * [Platform list](#platform-list)
@@ -52,56 +49,33 @@ file a new issue.
   * [Windows](#windows-4)
 * [Note for downstream distributors of Node.js](#note-for-downstream-distributors-of-nodejs)
 
-## Supported platforms
+## 支持的平台
 
-This list of supported platforms is current as of the branch/release to
-which it belongs.
+下面是所支持的平台
 
-### Input
+### 输入
 
-Node.js relies on V8 and libuv. We adopt a subset of their supported platforms.
+Node.js 依赖于V8和libuv，我们支持他们所支持的子集。
 
-### Strategy
+### 策略
 
-There are three support tiers:
+有三层支持
 
-* **Tier 1**: These platforms represent the majority of Node.js users. The
-  Node.js Build Working Group maintains infrastructure for full test coverage.
-  Maintenance is supported by the Node.js core team. All commits to the
-  Node.js repository are tested on multiple variants of these platforms. Test
-  failures on tier 1 platforms will block releases.
-* **Tier 2**: These platforms represent smaller segments of the Node.js user
-  base. The Node.js Build Working Group maintains infrastructure for full test
-  coverage. Maintenance is supported by smaller groups or individuals within
-  the Node.js core team, or the vendor of the platform itself. All commits to
-  the Node.js repository are tested on multiple variants of these platforms
-  where practical. Test failures on tier 2 platforms will block releases.
-  Delays in release of binaries for these platforms are acceptable
-  where necessary due to infrastructure concerns.
-* **Experimental**: May not compile or test suite may not pass. The core team
-  does not create releases for these platforms. Test failures on experimental
-  platforms do not block releases. Contributions to improve support for these
-  platforms are welcome.
+* **大众平台**: 这些平台代表大多数Node.js用户。Node.js构建工作组维护基础设施以实现全面的测试覆盖。Node.js核心团队维护支持。所有提交都会在多个平台进行测试。第1层平台上的测试失败将暂停发布。
+* **小众平台**: 这些平台代表了Node.js用户群中较小的部分。js构建工作组维护基础设施以实现全面的测试覆盖。维护由Node.js核心团队或平台本身的供应商中的较小的组或个人支持。所有提交到Node.js库的操作都要在这些平台的多个变体上进行测试。第2层平台上的测试失败将阻碍发布。对于这些平台可能会延迟支持。
+* **实验**: 团队不会因为一些实验性平台测试失败而停止发布版本。
 
-Platforms may move between tiers between major release lines. The table below
-will be updated to reflect those changes.
+版本的发布会基于上面策略变动。
 
-### Platform list
+### 操作系统列表
 
-Compiling and running Node.js is supported for a limited set of operating
-systems, architectures and libc versions. The table below lists the
-combinations that the core team has committed to supporting and the nature of
-that support as per the support tiers above. A list of
-[supported compile toolchains](#supported-toolchains) is also supplied for
-tier 1 platforms.
+编译和运行Node.js支持有限的一组操作系统、体系结构和libc版本。下表列出了核心团队承诺支持的列表，以及按照上面的支持层提供的支持的性质。还为第1层平台提供了一个受支持的编译工具链列表。
 
-**For production applications, run Node.js on supported platforms only.**
+**部署在支持的平台上运行生产环境代码**
 
-Node.js does not support a platform version if a vendor has expired support
-for it. In other words, Node.js does not support running on End-of-Life (EoL)
-platforms. This is true regardless of entries in the table below.
+nodejs不支持过期的平台
 
-| Operating System | Architectures    | Versions                        | Support Type | Notes                             |
+| 操作系统| 架构    | 版本                        | 支持类型 | 备注                             |
 | ---------------- | ---------------- | ------------------------------- | ------------ | --------------------------------- |
 | GNU/Linux        | x64              | kernel >= 3.10, glibc >= 2.17   | Tier 1       | e.g. Ubuntu 16.04 <sup>[1](#fn1)</sup>, Debian 9, EL 7 <sup>[2](#fn2)</sup> |
 | GNU/Linux        | x64              | kernel >= 3.10, musl >= 1.1.19  | Experimental | e.g. Alpine 3.8                   |
@@ -119,49 +93,45 @@ platforms. This is true regardless of entries in the table below.
 | AIX              | ppc64be >=power7 | >= 7.1 TL05                     | Tier 2       |                                   |
 | FreeBSD          | x64              | >= 11                           | Experimental | Downgraded as of Node.js 12       |
 
-<em id="fn1">1</em>: GCC 6 is not provided on the base platform, users will
-  need the
-  [Toolchain test builds PPA](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test?field.series_filter=xenial)
-  or similar to source a newer compiler.
+<em id="fn1">1</em>: GCC 6不是在基础平台上提供的，用户将需要工具链测试构建PPA或类似于源代码的较新的编译器。
+  [工具链测试构建PPA](https://launchpad.net/~ubuntu-toolchain-r/+archive/ubuntu/test?field.series_filter=xenial)
+  
 
-<em id="fn2">2</em>: GCC 6 is not provided on the base platform, users will
-  need the
+<em id="fn2">2</em>: 基础平台上不提供GCC 6，用户需要devtoolset-6或更高版本才能获得更新的编译器。
   [devtoolset-6](https://www.softwarecollections.org/en/scls/rhscl/devtoolset-6/)
-  or later to source a newer compiler.
+  
 
-<em id="fn3">3</em>: Older kernel versions may work for ARM64, however the
-  Node.js test infrastructure only tests >= 4.5.
+<em id="fn3">3</em>: 但是，旧的内核版本可能适用于ARM64
+js测试基础架构只测试>= 4.5。
 
-<em id="fn4">4</em>: On Windows, running Node.js in Windows terminal emulators
-  like `mintty` requires the usage of [winpty](https://github.com/rprichard/winpty)
-  for the tty channels to work correctly (e.g. `winpty node.exe script.js`).
-  In "Git bash" if you call the node shell alias (`node` without the `.exe`
-  extension), `winpty` is used automatically.
+<em id="fn4">4</em>: 在Windows上，在mintty这样的Windows终端模拟器中运行Node.js需要使用winpty才能使tty通道正确工作(例如winpty node.exe script.js)。在“Git bash”中，如果您调用节点shell别名(没有.exe扩展名的节点)，winpty将自动使用。
+  [winpty](https://github.com/rprichard/winpty)
 
-<em id="fn5">5</em>: The Windows Subsystem for Linux (WSL) is not directly
-  supported, but the GNU/Linux build process and binaries should work. The
-  community will only address issues that reproduce on native GNU/Linux
-  systems. Issues that only reproduce on WSL should be reported in the
-  [WSL issue tracker](https://github.com/Microsoft/WSL/issues). Running the
-  Windows binary (`node.exe`) in WSL is not recommended. It will not work
-  without workarounds such as stdio redirection.
+<em id="fn5">5</em>:用于Linux的Windows子系统(WSL)不是直接的
+支持，但是GNU/Linux构建过程和二进制文件应该可以工作。的
+社区将只处理在本机GNU/Linux上重现的问题
+系统。只在WSL上重现的问题应在
+(WSL问题跟踪器)(https://github.com/Microsoft/WSL/issues)。运行
+不建议在WSL中使用Windows二进制文件(' node.exe ')。这是行不通的
+没有像stdio重定向这样的变通方法。
+  [WSL issue tracker](https://github.com/Microsoft/WSL/issues).
 
-<em id="fn6">6</em>: Running Node.js on x86 Windows should work and binaries
-are provided. However, tests in our infrastructure only run on WoW64.
-Furthermore, compiling on x86 Windows is currently considered Experimental and
-may not be possible.
+<em id="fn6">6</em>: 在x86 Windows上运行Node.js应该是可行的，而且是二进制的
+被提供。然而，我们的基础设施中的测试只在WoW64上运行。
+此外，在x86 Windows上编译目前被认为是实验性的
+可能是不可能的。
 
-### Supported toolchains
+### 工具链支持的平台
 
-Depending on the host platform, the selection of toolchains may vary.
+根据主机平台的不同，工具链的选择可能有所不同。
 
-| Operating System | Compiler Versions                                              |
+| 操作系统 | 编译版本                                             |
 | ---------------- | -------------------------------------------------------------- |
 | Linux            | GCC >= 6.3                                                     |
 | Windows          | Visual Studio >= 2017 with the Windows 10 SDK on a 64-bit host |
 | macOS            | Xcode >= 8 (Apple LLVM >= 8)                                   |
 
-### Official binary platforms and toolchains
+### 官方的二进制平台和工具链
 
 Binaries at <https://nodejs.org/download/release/> are produced on:
 
